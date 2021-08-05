@@ -328,5 +328,7 @@ fabric.properties
 
 # local settings
 server-runner.sh
+
+# exclude all files in migrations dir exept __init__.py
 */migrations/*
 !*/migrations/__init__.py
