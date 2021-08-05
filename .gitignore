@@ -327,5 +327,5 @@ fabric.properties
 
 
 # local settings
-#productManagerServer/settings/local_setttings.py
+productManagerServer/settings/local_setttings.py
 ./server-runner.sh
