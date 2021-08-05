@@ -328,4 +328,5 @@ fabric.properties
 
 # local settings
 server-runner.sh
-*/migrations/*initial*
+*/migrations/*
+!*/migrations/__init__.py
