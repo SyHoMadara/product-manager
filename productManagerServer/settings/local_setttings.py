@@ -2,7 +2,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-ALLOWED_HOSTS = ['192.168.1.53', ]
+ALLOWED_HOSTS = []
 
 DATABASES = {
     'default': {
