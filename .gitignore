@@ -328,4 +328,4 @@ fabric.properties
 
 # local settings
 server-runner.sh
-account/migrations/*initial*
+*/migrations/*initial*

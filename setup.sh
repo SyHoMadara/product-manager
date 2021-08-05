@@ -9,6 +9,9 @@ clear
 
 # django requirement
 python3 -m pip install django
+python -m pip install django-mptt
+# install Pillow for images
+python -m pip install Pillow
 
 # alternative packages
 python3 -m pip install phonenumbers
