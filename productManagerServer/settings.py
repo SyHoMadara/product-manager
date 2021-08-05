@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-96p-ubsvhvv59obg%_c4peu@xisto4%zhgd2h6fpxfm8)jrk*l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = ['192.168.1.53', ]
+from settings.local_setttings import ALLOWED_HOSTS
 
 # Application definition
 
@@ -73,12 +73,13 @@ WSGI_APPLICATION = 'productManagerServer.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+from settings.local_setttings import DATABASES
 
 
 # Password validation
