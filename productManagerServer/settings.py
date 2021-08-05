@@ -24,8 +24,7 @@ SECRET_KEY = 'django-insecure-96p-ubsvhvv59obg%_c4peu@xisto4%zhgd2h6fpxfm8)jrk*l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS imported from local settings
-
+ALLOWED_HOSTS = ['192.168.1.53', ]
 
 # Application definition
 
@@ -38,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # site applications
-    'account.apps.AccountConfig',
+    'account',
+
+    # alternative fields
+    'phonenumber_field',
 
     # res framework
     'rest_framework',
@@ -90,8 +92,23 @@ WSGI_APPLICATION = 'productManagerServer.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# imported from local settgins
-
+# imported from local settings
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'mssql-server': {
+        "ENGINE": "mssql",
+        "NAME": "ProductManager",
+        "USER": "SA",
+        "PASSWORD": "A^mfqwa6h#s7uCx6P@A-aw=z+",
+        "HOST": "127.0.0.1",
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

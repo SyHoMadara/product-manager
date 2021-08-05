@@ -5,22 +5,20 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from rest_framework.authtoken.models import Token
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class User(AbstractUser):
     # user properties
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    email = models.EmailField(_('email address'), blank=True, null=True)
-    phone_number = models.CharField(_('phone number'), max_length=14, null=True, blank=True)
+    email = models.EmailField(_('email address'), unique=True,blank=True, null=True)
+    phone_number = PhoneNumberField(_('phone number'), unique=True)
 
     # settings
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
     hide_email = models.BooleanField(default=True)
     hide_phone_number = models.BooleanField(default=True)
-    hide_image_profile = models.BooleanField(default=True)
-    email_verified = models.BooleanField(default=False)
-    registered_google_account = models.BooleanField(default=False, null=True, blank=True)
 
     # methods
     def __str__(self):
