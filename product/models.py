@@ -55,6 +55,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, allow_unicode=True, blank=True)
     title = models.CharField(max_length=50, blank=False)
     cost = models.DecimalField(decimal_places=0, max_digits=12, default=0)
+    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     image = models.ImageField(
         verbose_name='Image',
         upload_to='products/',
