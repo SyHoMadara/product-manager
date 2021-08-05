@@ -14,6 +14,8 @@ class User(AbstractUser):
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     email = models.EmailField(_('email address'), unique=True,blank=True, null=True)
     phone_number = PhoneNumberField(_('phone number'), unique=True)
+    home_number = PhoneNumberField(_('home telephone'),blank=True, null=True)
+    fax_number = PhoneNumberField(_('fax number'),blank=True, null=True)
 
     # settings
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
@@ -23,9 +25,6 @@ class User(AbstractUser):
     # methods
     def __str__(self):
         return self.username
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
