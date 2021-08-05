@@ -7,7 +7,14 @@ export PS1
 
 clear
 
+# django requirement
 python3 -m pip install django
+
+# alternative packages
+python3 -m pip install phonenumbers
+python3 -m pip install django-phonenumber-field
+# rest framework
+python3 -m pip install djangorestframework
 
 # remove setups
 rm setup.bat
