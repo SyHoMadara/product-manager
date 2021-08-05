@@ -327,4 +327,4 @@ fabric.properties
 
 
 # local settings
-./server-runner.sh
+server-runner.sh
