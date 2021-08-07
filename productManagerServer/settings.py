@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     # site applications
     'account',
+    'product',
 
     # alternative fields
     'phonenumber_field',

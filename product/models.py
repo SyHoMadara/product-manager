@@ -1,16 +1,17 @@
 import uuid
 
-from django.core.exceptions import ValidationError
+from django.contrib import admin
 from django.db import models
 from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from account.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 class ProductCategory(MPTTModel):
     name = models.CharField(max_length=200)
-    id = models.UUIDField(verbose_name="UUID", default=uuid.uuid4, primary_key=True)
-    slug = models.SlugField(unique=True, allow_unicode=True, blank=True)
+    id = models.UUIDField(_('UUID'), default=uuid.uuid4, primary_key=True)
+    slug = models.SlugField(_('slug'), unique=True, allow_unicode=True, blank=True)
     is_root = models.BooleanField(default=False)
     parent = TreeForeignKey(
         'ProductCategory',
@@ -50,19 +51,63 @@ class ProductCategory(MPTTModel):
         return ' / '.join(full_path[::-1])  # Digital and Tools/Laptop
 
 
+class ProductBrand(MPTTModel):
+    name = models.CharField(max_length=200, unique=True)
+    id = models.UUIDField(_('UUID'), default=uuid.uuid4, primary_key=True)
+    slug = models.SlugField(_('slug'), unique=True, allow_unicode=True, blank=True)
+    is_root = models.BooleanField(default=False)
+    parent = TreeForeignKey(
+        'ProductBrand',
+        blank=True,
+        null=True,
+        related_name='child',
+        on_delete=models.CASCADE
+    )
+
+    class Meta:
+        unique_together = ('name', 'parent')
+        verbose_name_plural = "Brand"
+
+    def save(self, *args, **kwargs):
+        # create slug with self.name and parents names recursively
+        full_path = [self.name]
+        k = self.parent
+        while k is not None:
+            full_path.append(k.name)
+            k = k.parent
+        self.slug = '_'.join(list(map(slugify, full_path[::-1])))  # digital-and-tools/laptop
+        # check that doesn't exist with this name and user name
+        for brand in ProductBrand.objects.all():
+            if brand.slug == self.slug:
+                self.id = brand.id
+        # set is_root value
+        self.is_root = not bool(self.parent)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        full_path = [self.name]
+        k = self.parent
+        while k is not None:
+            full_path.append(k.name)
+            k = k.parent
+
+        return ' / '.join(full_path[::-1])  # Huawei / Xiaomi
+
+
 class Product(models.Model):
-    id = models.UUIDField(verbose_name="UUID", default=uuid.uuid4, editable=False, primary_key=True)
-    slug = models.SlugField(unique=True, allow_unicode=True, blank=True)
-    title = models.CharField(max_length=50, blank=False)
-    cost = models.DecimalField(decimal_places=0, max_digits=12, default=0)
-    user = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
+    id = models.UUIDField(_('UUID'), default=uuid.uuid4, editable=False, primary_key=True)
+    slug = models.SlugField(_('slug'), unique=True, allow_unicode=True, blank=True)
+    title = models.CharField(_('title'), max_length=50, blank=False)
+    wight = models.FloatField(_('wight'), null=True, blank=True)
+    cost = models.DecimalField(_('cost'), decimal_places=0, max_digits=12, default=0)
     image = models.ImageField(
-        verbose_name='Image',
+        _('image'),
         upload_to='products/',
         null=True,
         blank=True,
     )
     description = models.CharField(
+        _('description'),
         max_length=400,
         null=True,
         blank=True
@@ -71,7 +116,14 @@ class Product(models.Model):
         'ProductCategory',
         null=True,
         blank=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+    )
+
+    brand = models.ForeignKey(
+        'ProductBrand',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
     )
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
