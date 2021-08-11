@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
-from applications.account import User
-from applications.product import Product
+from applications.account.models import User
+from applications.product.models import Product
 from django.utils.translation import gettext_lazy as _
 
 

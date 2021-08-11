@@ -1,6 +1,6 @@
 import uuid
 
-from django.db import models
+from django.db import models, DatabaseError
 from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.translation import gettext_lazy as _
@@ -92,6 +92,14 @@ class ProductBrand(MPTTModel):
         return ' / '.join(full_path[::-1])  # Huawei / Xiaomi
 
 
+def deploy_deleted_settings(self, deleted: bool):
+    # todo fill
+    if deleted:
+        pass
+    else:
+        pass
+
+
 class Product(models.Model):
     id = models.UUIDField(_('UUID'), default=uuid.uuid4, editable=False, primary_key=True)
     slug = models.SlugField(_('slug'), unique=True, allow_unicode=True, blank=True)
@@ -113,16 +121,12 @@ class Product(models.Model):
     )
     category = models.ForeignKey(
         'ProductCategory',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
     )
 
     brand = models.ForeignKey(
         'ProductBrand',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
     )
 
     def delete(self, using=None, keep_parents=False):
@@ -135,10 +139,10 @@ class Product(models.Model):
         # set default description
         if not self.description or self.description == "":
             self.description = f'{self.title} you can pay for it {self.cost.__str__()}$'
-        # set default category
-        if not self.category:
-            self.category = ProductCategory.objects.get(slug='another')
-
+        if self.category.is_root:
+            raise DatabaseError("Product can not belong to a root category")
+        # deploy changes if product deleted
+        deploy_deleted_settings(self.deleted)
         super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
