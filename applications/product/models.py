@@ -92,9 +92,9 @@ class ProductBrand(MPTTModel):
         return ' / '.join(full_path[::-1])  # Huawei / Xiaomi
 
 
-def deploy_deleted_settings(self, deleted: bool):
+def deploy_deleted_settings(self):
     # todo fill
-    if deleted:
+    if self.deleted:
         pass
     else:
         pass
@@ -142,7 +142,7 @@ class Product(models.Model):
         if self.category.is_root:
             raise DatabaseError("Product can not belong to a root category")
         # deploy changes if product deleted
-        deploy_deleted_settings(self.deleted)
+        deploy_deleted_settings(self)
         super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
