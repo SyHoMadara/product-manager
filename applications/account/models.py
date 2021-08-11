@@ -16,6 +16,7 @@ class User(AbstractUser):
     phone_number = PhoneNumberField(_('phone number'), unique=True)
     home_number = PhoneNumberField(_('home telephone'),blank=True, null=True)
     fax_number = PhoneNumberField(_('fax number'),blank=True, null=True)
+    deleted = models.BooleanField(_('deleted'), default=False)
 
     # settings
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
@@ -25,6 +26,10 @@ class User(AbstractUser):
     # methods
     def __str__(self):
         return self.username
+
+    def delete(self, using=None, keep_parents=False):
+        self.deleted = True
+        self.save()
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

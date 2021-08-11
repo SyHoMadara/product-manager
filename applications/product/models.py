@@ -1,10 +1,8 @@
 import uuid
 
-from django.contrib import admin
 from django.db import models
 from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
-from account.models import User
 from django.utils.translation import gettext_lazy as _
 
 
@@ -100,6 +98,7 @@ class Product(models.Model):
     title = models.CharField(_('title'), max_length=50, blank=False)
     wight = models.FloatField(_('wight'), null=True, blank=True)
     cost = models.DecimalField(_('cost'), decimal_places=0, max_digits=12, default=0)
+    deleted = models.BooleanField(_('deleted'), default=False)
     image = models.ImageField(
         _('image'),
         upload_to='products/',
@@ -125,6 +124,10 @@ class Product(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
     )
+
+    def delete(self, using=None, keep_parents=False):
+        self.deleted = True
+        self.save()
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         # create slug

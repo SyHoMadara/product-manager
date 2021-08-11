@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # site applications
-    'account',
-    'product',
+    'applications.account',
+    'applications.product',
+    'applications.action_stream',
 
     # alternative fields
     'phonenumber_field',
@@ -99,16 +100,16 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'mssql-server': {
-        "ENGINE": "mssql",
-        "NAME": "ProductManager",
-        "USER": "SA",
-        "PASSWORD": "A^mfqwa6h#s7uCx6P@A-aw=z+",
-        "HOST": "127.0.0.1",
-        "PORT": "1433",
-        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
-        },
-    },
+    # 'mssql-server': {
+    #     "ENGINE": "mssql",
+    #     "NAME": "ProductManager",
+    #     "USER": "SA",
+    #     "PASSWORD": "A^mfqwa6h#s7uCx6P@A-aw=z+",
+    #     "HOST": "127.0.0.1",
+    #     "PORT": "1433",
+    #     "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
+    #     },
+    # },
 }
 
 # Password validation
