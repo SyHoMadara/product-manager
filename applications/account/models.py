@@ -9,14 +9,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from src import project_model_base
 
 
-def deploy_deleted_settings(self):
-    # todo fill
-    if self.is_active:
-        pass
-    else:
-        pass
-
-
 class User(AbstractUser, project_model_base.ProjectAbstractModelBase):
     # user properties
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
