@@ -8,7 +8,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ProductCategory(project_model_base.ProjectAbstractCategoryBase):
-
     parent = TreeForeignKey(
         'ProductCategory',
         blank=True,
@@ -19,7 +18,6 @@ class ProductCategory(project_model_base.ProjectAbstractCategoryBase):
 
 
 class ProductBrand(project_model_base.ProjectAbstractCategoryBase):
-
     parent = TreeForeignKey(
         'ProductBrand',
         blank=True,
@@ -27,9 +25,6 @@ class ProductBrand(project_model_base.ProjectAbstractCategoryBase):
         related_name='child',
         on_delete=models.CASCADE
     )
-
-
-
 
 
 class Product(project_model_base.ProjectAbstractModelBase):
