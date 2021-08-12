@@ -13,7 +13,7 @@ class ProductCategory(project_model_base.ProjectAbstractCategoryBase):
         blank=True,
         null=True,
         related_name='child',
-        on_delete=models.CASCADE
+        on_delete=models.PROTECT
     )
 
 
@@ -23,7 +23,7 @@ class ProductBrand(project_model_base.ProjectAbstractCategoryBase):
         blank=True,
         null=True,
         related_name='child',
-        on_delete=models.CASCADE
+        on_delete=models.PROTECT
     )
 
 
