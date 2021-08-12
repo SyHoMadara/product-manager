@@ -1,16 +1,14 @@
 import uuid
 
 from django.db import models, DatabaseError
-from django.utils.text import slugify
-from mptt.models import MPTTModel, TreeForeignKey
+from mptt.fields import TreeForeignKey
+
+from src.project_model_base import ProjectAbstractModelBase, ProjectAbstractCategoryBase
 from django.utils.translation import gettext_lazy as _
 
 
-class ProductCategory(MPTTModel):
-    name = models.CharField(max_length=200)
-    id = models.UUIDField(_('UUID'), default=uuid.uuid4, primary_key=True)
-    slug = models.SlugField(_('slug'), unique=True, allow_unicode=True, blank=True)
-    is_root = models.BooleanField(default=False)
+class ProductCategory(ProjectAbstractCategoryBase):
+
     parent = TreeForeignKey(
         'ProductCategory',
         blank=True,
@@ -19,41 +17,9 @@ class ProductCategory(MPTTModel):
         on_delete=models.CASCADE
     )
 
-    class Meta:
-        unique_together = ('name', 'parent')
-        verbose_name_plural = "Categories"
 
-    def save(self, *args, **kwargs):
-        # create slug with self.name and parents names recursively
-        full_path = [self.name]
-        k = self.parent
-        while k is not None:
-            full_path.append(k.name)
-            k = k.parent
-        self.slug = '_'.join(list(map(slugify, full_path[::-1])))  # digital-and-tools/laptop
-        # check that doesn't exist with this name and user name
-        for category in ProductCategory.objects.all():
-            if category.slug == self.slug:
-                self.id = category.id
-        # set is_root value
-        self.is_root = not bool(self.parent)
-        super().save(*args, **kwargs)
+class ProductBrand(ProjectAbstractCategoryBase):
 
-    def __str__(self):
-        full_path = [self.name]
-        k = self.parent
-        while k is not None:
-            full_path.append(k.name)
-            k = k.parent
-
-        return ' / '.join(full_path[::-1])  # Digital and Tools/Laptop
-
-
-class ProductBrand(MPTTModel):
-    name = models.CharField(max_length=200, unique=True)
-    id = models.UUIDField(_('UUID'), default=uuid.uuid4, primary_key=True)
-    slug = models.SlugField(_('slug'), unique=True, allow_unicode=True, blank=True)
-    is_root = models.BooleanField(default=False)
     parent = TreeForeignKey(
         'ProductBrand',
         blank=True,
@@ -61,35 +27,6 @@ class ProductBrand(MPTTModel):
         related_name='child',
         on_delete=models.CASCADE
     )
-
-    class Meta:
-        unique_together = ('name', 'parent')
-        verbose_name_plural = "Brand"
-
-    def save(self, *args, **kwargs):
-        # create slug with self.name and parents names recursively
-        full_path = [self.name]
-        k = self.parent
-        while k is not None:
-            full_path.append(k.name)
-            k = k.parent
-        self.slug = '_'.join(list(map(slugify, full_path[::-1])))  # digital-and-tools/laptop
-        # check that doesn't exist with this name and user name
-        for brand in ProductBrand.objects.all():
-            if brand.slug == self.slug:
-                self.id = brand.id
-        # set is_root value
-        self.is_root = not bool(self.parent)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        full_path = [self.name]
-        k = self.parent
-        while k is not None:
-            full_path.append(k.name)
-            k = k.parent
-
-        return ' / '.join(full_path[::-1])  # Huawei / Xiaomi
 
 
 def deploy_deleted_settings(self):
