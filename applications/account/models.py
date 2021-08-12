@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from rest_framework.authtoken.models import Token
 from phonenumber_field.modelfields import PhoneNumberField
+from src import project_model_base
 
 
 def deploy_deleted_settings(self):
@@ -16,7 +17,7 @@ def deploy_deleted_settings(self):
         pass
 
 
-class User(AbstractUser):
+class User(AbstractUser, project_model_base.ProjectAbstractModelBase):
     # user properties
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
@@ -40,7 +41,7 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         # deploy changes if product deleted
-        deploy_deleted_settings(self)
+        self.deploy_deleted_settings()
         super().save(*args, **kwargs)
 
 

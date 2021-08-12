@@ -16,6 +16,15 @@ class ProjectAbstractModelBase(models.Model):
     class Meta:
         abstract = True
 
+    def deploy_deleted_settings(self):
+        """
+        if self.deleted:
+            do something
+        else:
+            do something else
+        """
+        raise NotImplementedError
+
     def delete(self, using=None, keep_parents=False):
         raise NotImplementedError
 

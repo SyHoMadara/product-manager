@@ -3,11 +3,11 @@ import uuid
 from django.db import models, DatabaseError
 from mptt.fields import TreeForeignKey
 
-from src.project_model_base import ProjectAbstractModelBase, ProjectAbstractCategoryBase
+from src import project_model_base
 from django.utils.translation import gettext_lazy as _
 
 
-class ProductCategory(ProjectAbstractCategoryBase):
+class ProductCategory(project_model_base.ProjectAbstractCategoryBase):
 
     parent = TreeForeignKey(
         'ProductCategory',
@@ -18,7 +18,7 @@ class ProductCategory(ProjectAbstractCategoryBase):
     )
 
 
-class ProductBrand(ProjectAbstractCategoryBase):
+class ProductBrand(project_model_base.ProjectAbstractCategoryBase):
 
     parent = TreeForeignKey(
         'ProductBrand',
@@ -29,15 +29,10 @@ class ProductBrand(ProjectAbstractCategoryBase):
     )
 
 
-def deploy_deleted_settings(self):
-    # todo fill
-    if self.deleted:
-        pass
-    else:
-        pass
 
 
-class Product(models.Model):
+
+class Product(project_model_base.ProjectAbstractModelBase):
     id = models.UUIDField(_('UUID'), default=uuid.uuid4, editable=False, primary_key=True)
     slug = models.SlugField(_('slug'), unique=True, allow_unicode=True, blank=True)
     title = models.CharField(_('title'), max_length=50, blank=False)
@@ -79,7 +74,7 @@ class Product(models.Model):
         if self.category.is_root:
             raise DatabaseError("Product can not belong to a root category")
         # deploy changes if product deleted
-        deploy_deleted_settings(self)
+        self.deploy_deleted_settings()
         super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
